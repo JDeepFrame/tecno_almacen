@@ -1,0 +1,48 @@
+#gitignore
+
+# Archivos de compilación de Java
+*.class
+
+# Archivos de registro
+*.log
+
+# Archivos generados automáticamente
+*.war
+*.jar
+*.ear
+
+# Directorio de salida de Maven
+/target/
+
+# Configuraciones de NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos temporales de editores
+*~
+*.swp
+*.swo
+
+# Configuraciones de IDEs (por si se usa más de uno)
+
+## IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+## Eclipse (por si alguien abre el proyecto en Eclipse)
+.project
+.classpath
+.settings/
+
+##Ignorar archivo /data/pacientes.txt
+/data/pacientes.txt
