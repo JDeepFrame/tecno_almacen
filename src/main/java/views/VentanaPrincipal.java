@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package views;
 
 import java.awt.Color;
@@ -10,6 +6,7 @@ import java.awt.Color;
  *
  * @author J. Vidaurre Al.
  */
+
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     /**
@@ -17,6 +14,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
      */
     public VentanaPrincipal() {
         initComponents();
+        //this.setSize(,); //Ajusta tamaño
+        this.setLocationRelativeTo(null); //Centra en pantalla
     }
 
     /**
