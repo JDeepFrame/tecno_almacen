@@ -10,7 +10,8 @@
     <class>models.AlertaStock</class>
     <class>models.Producto</class>
     <properties>
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/inventario_electronica?serverTimezone=UTC "/>
+      <property name="jakarta.persistence.jdbc.url" 
+                value="jdbc:mysql://localhost:3306/inventario_electronica?serverTimezone=UTC"/>
       <property name="jakarta.persistence.jdbc.user" value="root"/>
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
       <property name="jakarta.persistence.jdbc.password" value="admin123"/>
