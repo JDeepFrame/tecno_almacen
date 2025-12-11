@@ -1,23 +1,46 @@
 package views;
 
+import javax.swing.JOptionPane;
+import dao.ProductoDAO;
+import models.Producto;
+import tablemodel.ProductoTableModel;
+
 /**
  *
  * @author J. Vidaurre Al.
  */
+
 public class VentanaPrincipal extends javax.swing.JFrame {
 
-    // Declaraciones: pega dentro de la clase (antes del constructor)
+    // -----Declaraciones----- //
+    
+    // DAOs:
     private final dao.ProductoDAO productoDAO = new dao.ProductoDAO();
+    private final dao.ProveedorDAO proveedorDAO = new dao.ProveedorDAO();
+    private final dao.MovimientoDAO movimientoDAO = new dao.MovimientoDAO();
+    
+    // TableModels: (no inicializados)
     private tablemodel.ProductoTableModel productoTableModel; // se inicializa al cargar
-
+    private tablemodel.ProveedorTableModel proveedorTableModel;
+    private tablemodel.MovimientoTableModel movimientoTableModel;
+    
+    // -----Fin_Declaraciones----- //
+    
+    
+    // -----Método_Constructor----- //
     
     public VentanaPrincipal() {
+        
         initComponents();
+        
         // Inicializar tabla vacía y evitar nulls
         productoTableModel = new tablemodel.ProductoTableModel(java.util.Collections.emptyList());
-        tblProductos.setModel(productoTableModel); // usa el nombre real de tu JTable
+        tblProductos.setModel(productoTableModel);
     }
-
+    
+    // -----Fin_Método_Constructor----- //
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,10 +82,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnProveedores.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnProveedores.setText("Proveedores");
         btnProveedores.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnProveedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProveedoresActionPerformed(evt);
+            }
+        });
 
         btnRegistros.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRegistros.setText("Registros");
         btnRegistros.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnRegistros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrosActionPerformed(evt);
+            }
+        });
 
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnLogin.setText("Login");
@@ -110,10 +143,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAgregar.setText("Agregar");
         btnAgregar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnEliminar.setText("Eliminar");
         btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -194,10 +237,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
-        // TODO add your handling code here:
         
-        // carga en background para no bloquear la UI
+        // Carga en background para no bloquear la UI
         new javax.swing.SwingWorker<java.util.List<models.Producto>, Void>() {
             @Override
             protected java.util.List<models.Producto> doInBackground() throws Exception {
@@ -220,13 +263,248 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 }
             }
-        }.execute();
-        
+        }.execute();        
     }//GEN-LAST:event_btnProductosActionPerformed
 
+    
+    private void btnProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProveedoresActionPerformed
+        
+        new javax.swing.SwingWorker<java.util.List<models.Proveedor>, Void>() {
+        @Override
+        protected java.util.List<models.Proveedor> doInBackground() {
+            return proveedorDAO.listar();
+        }
+        @Override
+        protected void done() {
+            try {
+                java.util.List<models.Proveedor> lista = get();
+                if (proveedorTableModel == null) {
+                    proveedorTableModel = new tablemodel.ProveedorTableModel(lista);
+                    tblProductos.setModel(proveedorTableModel); // tblProductos es tu JTable
+                } else {
+                    proveedorTableModel.update(lista);
+                }
+            } catch (Exception ex) {
+                javax.swing.JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                    "Error cargando proveedores: " + ex.getMessage(),
+                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }.execute();
+    }//GEN-LAST:event_btnProveedoresActionPerformed
 
+    
+    private void btnRegistrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrosActionPerformed
+        
+        new javax.swing.SwingWorker<java.util.List<models.MovimientoInventario>, Void>() {
+        @Override
+        protected java.util.List<models.MovimientoInventario> doInBackground() {
+            return movimientoDAO.listar();
+        }
+        @Override
+        protected void done() {
+            try {
+                java.util.List<models.MovimientoInventario> lista = get();
+                if (movimientoTableModel == null) {
+                    movimientoTableModel = new tablemodel.MovimientoTableModel(lista);
+                    tblProductos.setModel(movimientoTableModel);
+                } else {
+                    movimientoTableModel.update(lista);
+                }
+            } catch (Exception ex) {
+                javax.swing.JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                    "Error cargando registros: " + ex.getMessage(),
+                    "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }.execute();
+    }//GEN-LAST:event_btnRegistrosActionPerformed
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        // Según el TableModel activo, agregamos el tipo correcto
+        var model = tblProductos.getModel();
 
+        /* ----------------------------------------------------------
+           AGREGAR PRODUCTO
+           ---------------------------------------------------------- */
+        if (model instanceof tablemodel.ProductoTableModel) {
+
+            String nombre = JOptionPane.showInputDialog(this, "Nombre del producto:");
+            if (nombre == null || nombre.isBlank()) return;
+
+            String precioTxt = JOptionPane.showInputDialog(this, "Precio unitario:");
+            if (precioTxt == null || precioTxt.isBlank()) return;
+
+            String stockTxt = JOptionPane.showInputDialog(this, "Stock inicial:");
+            if (stockTxt == null || stockTxt.isBlank()) return;
+
+            try {
+                java.math.BigDecimal precio = new java.math.BigDecimal(precioTxt);
+                int stock = Integer.parseInt(stockTxt);
+
+                models.Producto nuevo = new models.Producto();
+                nuevo.setNombre(nombre);
+                nuevo.setPrecioUnitario(precio);
+                nuevo.setStockActual(stock);
+
+                productoDAO.guardar(nuevo);
+
+                productoTableModel.update(productoDAO.listar());
+                JOptionPane.showMessageDialog(this, "Producto agregado.");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+            return;
+        }
+
+        /* ----------------------------------------------------------
+           AGREGAR PROVEEDOR
+           ---------------------------------------------------------- */
+        if (model instanceof tablemodel.ProveedorTableModel) {
+
+            String nombre = JOptionPane.showInputDialog(this, "Nombre:");
+            if (nombre == null || nombre.isBlank()) return;
+
+            String ruc = JOptionPane.showInputDialog(this, "RUC:");
+            if (ruc == null || ruc.isBlank()) return;
+
+            String telefono = JOptionPane.showInputDialog(this, "Teléfono:");
+            if (telefono == null) telefono = "";
+
+            try {
+                models.Proveedor p = new models.Proveedor();
+                p.setNombre(nombre);
+                p.setRuc(ruc);
+                p.setTelefono(telefono);
+
+                proveedorDAO.guardar(p);
+
+                proveedorTableModel.update(proveedorDAO.listar());
+                JOptionPane.showMessageDialog(this, "Proveedor agregado.");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+            return;
+        }
+
+        /* ----------------------------------------------------------
+           AGREGAR MOVIMIENTO / REGISTRO
+           ---------------------------------------------------------- */
+        if (model instanceof tablemodel.MovimientoTableModel) {
+
+            String tipo = JOptionPane.showInputDialog(this, "Tipo (entrada/salida):");
+            if (tipo == null || tipo.isBlank()) return;
+
+            String cantTxt = JOptionPane.showInputDialog(this, "Cantidad:");
+            if (cantTxt == null || cantTxt.isBlank()) return;
+
+            try {
+                int cantidad = Integer.parseInt(cantTxt);
+
+                models.MovimientoInventario m = new models.MovimientoInventario();
+                m.setTipoMovimiento(tipo);
+                m.setCantidad(cantidad);
+                m.setFecha(new java.util.Date());
+
+                // usuario fijo (ID = 1)
+                models.Usuario u = new models.Usuario();
+                u.setIdUsuario(1);
+                m.setIdUsuario(u);
+
+                // producto fijo (ID = 1)
+                models.Producto p = new models.Producto();
+                p.setIdProducto(1);
+                m.setIdProducto(p);
+
+                movimientoDAO.guardar(m);
+
+                movimientoTableModel.update(movimientoDAO.listar());
+                JOptionPane.showMessageDialog(this, "Registro agregado.");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        int row = tblProductos.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un elemento.");
+            return;
+        }
+
+        var model = tblProductos.getModel();
+
+        /* ----------------------------------------------------------
+           ELIMINAR PRODUCTO
+           ---------------------------------------------------------- */
+        if (model instanceof tablemodel.ProductoTableModel) {
+
+            models.Producto p = productoTableModel.get(row);
+
+            int opt = JOptionPane.showConfirmDialog(this,
+                    "¿Eliminar producto: " + p.getNombre() + "?",
+                    "Confirmar", JOptionPane.YES_NO_OPTION);
+
+            if (opt != JOptionPane.YES_OPTION) return;
+
+            try {
+                productoDAO.eliminar(p.getIdProducto());
+                productoTableModel.update(productoDAO.listar());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+            return;
+        }
+
+        /* ----------------------------------------------------------
+           ELIMINAR PROVEEDOR
+           ---------------------------------------------------------- */
+        if (model instanceof tablemodel.ProveedorTableModel) {
+
+            models.Proveedor p = proveedorTableModel.get(row);
+
+            int opt = JOptionPane.showConfirmDialog(this,
+                    "¿Eliminar proveedor: " + p.getNombre() + "?",
+                    "Confirmar", JOptionPane.YES_NO_OPTION);
+
+            if (opt != JOptionPane.YES_OPTION) return;
+
+            try {
+                proveedorDAO.eliminar(p);
+                proveedorTableModel.update(proveedorDAO.listar());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+            return;
+        }
+
+        /* ----------------------------------------------------------
+           ELIMINAR MOVIMIENTO / REGISTRO
+           ---------------------------------------------------------- */
+        if (model instanceof tablemodel.MovimientoTableModel) {
+
+            models.MovimientoInventario m = movimientoTableModel.get(row);
+
+            int opt = JOptionPane.showConfirmDialog(this,
+                    "¿Eliminar registro ID: " + m.getIdMovimiento() + "?",
+                    "Confirmar", JOptionPane.YES_NO_OPTION);
+
+            if (opt != JOptionPane.YES_OPTION) return;
+
+            try {
+                movimientoDAO.eliminar(m);
+                movimientoTableModel.update(movimientoDAO.listar());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

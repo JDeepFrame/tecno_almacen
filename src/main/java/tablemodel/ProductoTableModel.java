@@ -41,4 +41,9 @@ public class ProductoTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
+    // dentro de clase ProductoTableModel
+    public models.Producto getProductoAt(int row) {
+        if (data == null || row < 0 || row >= data.size()) return null;
+        return data.get(row);
+    }
 }
