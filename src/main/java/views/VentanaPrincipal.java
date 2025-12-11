@@ -2,8 +2,13 @@ package views;
 
 import javax.swing.JOptionPane;
 import dao.ProductoDAO;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import models.Producto;
 import tablemodel.ProductoTableModel;
+import utils.ExcelUtil;
 
 /**
  *
@@ -63,7 +68,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnExportarPDF = new javax.swing.JButton();
+        btnExportarExcel = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         labelConexion = new javax.swing.JLabel();
         labelUser = new javax.swing.JLabel();
@@ -155,16 +161,30 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Exportar a PDF");
+        btnExportarPDF.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnExportarPDF.setText("Exportar a PDF");
+        btnExportarPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarPDFActionPerformed(evt);
+            }
+        });
+
+        btnExportarExcel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnExportarExcel.setText("Exportar a Excel");
+        btnExportarExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExportarExcelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+            .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnExportarPDF, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+            .addComponent(btnExportarExcel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,7 +194,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnExportarExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExportarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -509,14 +531,99 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnExportarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarPDFActionPerformed
+        
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar PDF");
+        chooser.setSelectedFile(new File("exportacion.pdf"));
+
+        int sel = chooser.showSaveDialog(this);
+        if (sel != JFileChooser.APPROVE_OPTION) return;
+
+        File file = chooser.getSelectedFile();
+        String tempPath = file.getAbsolutePath();
+        if (!tempPath.toLowerCase().endsWith(".pdf")) {
+            tempPath += ".pdf";
+        }
+
+        final String outputPath = tempPath; // ← ESTA ES LA CLAVE
+
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                utils.PdfUtil.exportToPDF(tblProductos, outputPath);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    JOptionPane.showMessageDialog(
+                            VentanaPrincipal.this,
+                            "PDF creado correctamente:\n" + outputPath
+                    );
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(
+                            VentanaPrincipal.this,
+                            "Error generando PDF:\n" + ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        }.execute();
+    }//GEN-LAST:event_btnExportarPDFActionPerformed
+
+    private void btnExportarExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarExcelActionPerformed
+        // Usa el JTable actual (el que se muestra en la UI)
+        final javax.swing.JTable tabla = tblProductos; // Si tu JTable tiene otro nombre, cámbialo aquí
+
+        if (tabla == null || tabla.getRowCount() == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay datos para exportar.");
+            return;
+        }
+
+        javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+        chooser.setDialogTitle("Guardar archivo Excel");
+        chooser.setSelectedFile(new java.io.File("exportacion.xlsx"));
+
+        if (chooser.showSaveDialog(this) != javax.swing.JFileChooser.APPROVE_OPTION) return;
+
+        String tempPath = chooser.getSelectedFile().getAbsolutePath();
+        if (!tempPath.toLowerCase().endsWith(".xlsx")) tempPath += ".xlsx";
+        final String outputPath = tempPath;
+
+        new javax.swing.SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                utils.ExcelUtil.exportToExcel(tabla, outputPath);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get(); // lanza la excepción si falló doInBackground
+                    javax.swing.JOptionPane.showMessageDialog(VentanaPrincipal.this, "Excel creado: " + outputPath);
+                } catch (Exception ex) {
+                    javax.swing.JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                            "Error al generar Excel: " + ex.getMessage(),
+                            "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }.execute();
+    }//GEN-LAST:event_btnExportarExcelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnExportarExcel;
+    private javax.swing.JButton btnExportarPDF;
     private javax.swing.JButton btnProductos;
     private javax.swing.JButton btnProveedores;
     private javax.swing.JButton btnRegistros;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
