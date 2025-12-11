@@ -71,7 +71,6 @@
               <Component id="btnProductos" max="32767" attributes="0"/>
               <Component id="btnProveedores" pref="119" max="32767" attributes="0"/>
               <Component id="btnRegistros" pref="119" max="32767" attributes="0"/>
-              <Component id="btnLogin" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -83,8 +82,7 @@
                   <Component id="btnProveedores" min="-2" pref="44" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnRegistros" min="-2" pref="44" max="-2" attributes="0"/>
-                  <EmptySpace pref="158" max="32767" attributes="0"/>
-                  <Component id="btnLogin" min="-2" pref="40" max="-2" attributes="0"/>
+                  <EmptySpace pref="198" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -132,17 +130,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRegistrosActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnLogin">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Segoe UI" size="12" style="1"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Login"/>
-            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Por defecto"/>
-            </Property>
-          </Properties>
-        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -184,6 +171,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="btnAgregar" alignment="0" pref="126" max="32767" attributes="0"/>
               <Component id="btnEliminar" alignment="0" max="32767" attributes="0"/>
+              <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -194,6 +182,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnEliminar" min="-2" pref="40" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jButton1" min="-2" pref="41" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -226,6 +216,14 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEliminarActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton1">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="12" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Exportar a PDF"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
